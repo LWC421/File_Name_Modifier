@@ -14,6 +14,8 @@ class MainWindow(tk.Frame):
         self.movie_only = tk.BooleanVar(value=True)
         self.sub_only = tk.BooleanVar(value=True)
 
+        self.current_dir = "/"
+
         self.Init()
         self.InitComponent()
 
@@ -108,9 +110,17 @@ class MainWindow(tk.Frame):
     #작업할 폴더 선택
     def SelectFolder(self):
         try:
-            self.dir_path = filedialog.askdirectory(parent=self.root, initialdir="/", title='Please select a directory')
+            self.dir_path = filedialog.askdirectory(parent=self.root, initialdir=self.current_dir, title='Please select a directory')
+
+            #Set Current Directory -> Change selected directory's parent dir
+            parent_dir = self.dir_path.split("/")[:-1]
+            self.current_dir = ""
+            for dir in parent_dir:
+                self.current_dir += dir + "/"
+                
             self.ShowFileList()
-        except:
+        except Exception as e:
+            print(e)
             return
 
     #파일 리스트 새로고침
